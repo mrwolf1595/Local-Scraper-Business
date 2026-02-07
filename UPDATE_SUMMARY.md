@@ -93,3 +93,21 @@ The scraper builds the Google Maps query as:
 ---
 
 **Status**: ✅ All issues resolved and UI enhanced!
+
+## 🚀 PRO Update: Marketing Powerhouse Edition (2025)
+
+### 📧 Advanced Data Extraction
+- **Website Crawling**: Automatically visits business websites to find hidden contact info.
+- **Email Extraction**: Scrapes emails from homepages and "Contact/About" pages.
+- **Social Media Links**: Detects Facebook, Instagram, Twitter, LinkedIn, and TikTok links.
+- **Website URL**: Captures the official website link.
+
+### ⚡ Performance & Reliability
+- **Concurrent Scraping**: Processes up to 4 businesses simultaneously for 4x speed.
+- **Robust Error Handling**: Improved retry logic and timeouts to prevent hanging.
+- **Smart Validation**: Standardized phone number extraction.
+
+### 📊 Enhanced UI & Export
+- **New Columns**: Website, Emails, Social Media added to the table.
+- **Rich Export**: Excel files now include all new contact fields for marketing campaigns.
+- **Status Updates**: Real-time progress tracking with "Processed X/Y" indicators.

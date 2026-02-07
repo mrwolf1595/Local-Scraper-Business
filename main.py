@@ -20,7 +20,7 @@ class ScraperApp:
         # Translations
         self.translations = {
             'ar': {
-                'title': '🗺️ مستخرج بيانات الأعمال من خرائط جوجل',
+                'title': 'مستخرج بيانات الأعمال',
                 'subtitle': 'استخراج بيانات الأعمال مع إزالة التكرار التلقائي',
                 'business_tag': 'نوع النشاط',
                 'business_hint': 'مثال: مكتب عقارات، مكتب محاماة، وكالة سيارات',
@@ -41,12 +41,15 @@ class ScraperApp:
                 'col_phone': 'الهاتف',
                 'col_address': 'العنوان',
                 'col_location': 'الموقع',
+                'col_website': 'الموقع الإلكتروني',
+                'col_email': 'البريد الإلكتروني',
                 'view_map': 'عرض الخريطة',
                 'language': 'English',
+                'about': 'معلومات عنا',
             },
             'en': {
-                'title': '🗺️ Google Maps Business Scraper',
-                'subtitle': 'Extract business data with automatic deduplication',
+                'title': 'Business Data Extractor Pro',
+                'subtitle': 'Extract business data with Emails & Socials',
                 'business_tag': 'Business Tag',
                 'business_hint': 'e.g., Real Estate Office, Law Firm, Car Dealership',
                 'region': 'Region',
@@ -66,8 +69,11 @@ class ScraperApp:
                 'col_phone': 'Phone',
                 'col_address': 'Address',
                 'col_location': 'Location',
+                'col_website': 'Website',
+                'col_email': 'Email',
                 'view_map': 'View Map',
                 'language': 'عربي',
+                'about': 'About Agency',
             }
         }
         
@@ -79,9 +85,14 @@ class ScraperApp:
         self.page.padding = 20
         self.page.rtl = True  # Right-to-left for Arabic
         self.page.scroll = ft.ScrollMode.AUTO  # Enable scrolling
+        self.page.fonts = {
+            "Roboto": "https://github.com/google/fonts/raw/main/apache/roboto/Roboto-Regular.ttf",
+        }
+        self.page.theme = ft.Theme(font_family="Roboto")
         
         # UI Components
         self.language_button = None
+        self.about_button = None
         self.header_title = None
         self.header_subtitle = None
         self.business_tag_field = None
@@ -114,6 +125,7 @@ class ScraperApp:
     def update_ui_language(self):
         """Update all UI text to current language"""
         self.language_button.text = self.get_text('language')
+        self.about_button.text = self.get_text('about')
         self.header_title.value = self.get_text('title')
         self.header_subtitle.value = self.get_text('subtitle')
         self.business_tag_field.label = self.get_text('business_tag')
@@ -137,6 +149,8 @@ class ScraperApp:
             ft.DataColumn(ft.Text(self.get_text('col_name'), weight=ft.FontWeight.BOLD)),
             ft.DataColumn(ft.Text(self.get_text('col_phone'), weight=ft.FontWeight.BOLD)),
             ft.DataColumn(ft.Text(self.get_text('col_address'), weight=ft.FontWeight.BOLD)),
+            ft.DataColumn(ft.Text(self.get_text('col_website'), weight=ft.FontWeight.BOLD)),
+            ft.DataColumn(ft.Text(self.get_text('col_email'), weight=ft.FontWeight.BOLD)),
             ft.DataColumn(ft.Text(self.get_text('col_location'), weight=ft.FontWeight.BOLD)),
         ]
         
@@ -151,6 +165,13 @@ class ScraperApp:
             style=ft.ButtonStyle(
                 color=Colors.BLUE_700,
             ),
+        )
+        
+        self.about_button = ft.Button(
+            self.get_text('about'),
+            icon=ft.Icons.INFO,
+            on_click=self.show_about_dialog,
+            style=ft.ButtonStyle(color=Colors.BLUE_700),
         )
         
         # Header
@@ -174,7 +195,10 @@ class ScraperApp:
                         self.header_title,
                         self.header_subtitle,
                     ], expand=True),
-                    self.language_button,
+                    ft.Row([
+                        self.about_button,
+                        self.language_button,
+                    ]),
                 ], alignment=ft.MainAxisAlignment.SPACE_BETWEEN),
             ]),
             margin=ft.Margin(left=0, top=0, right=0, bottom=20)
@@ -311,6 +335,8 @@ class ScraperApp:
                 ft.DataColumn(ft.Text(self.get_text('col_name'), weight=ft.FontWeight.BOLD, size=12)),
                 ft.DataColumn(ft.Text(self.get_text('col_phone'), weight=ft.FontWeight.BOLD, size=12)),
                 ft.DataColumn(ft.Text(self.get_text('col_address'), weight=ft.FontWeight.BOLD, size=12)),
+                ft.DataColumn(ft.Text(self.get_text('col_website'), weight=ft.FontWeight.BOLD, size=12)),
+                ft.DataColumn(ft.Text(self.get_text('col_email'), weight=ft.FontWeight.BOLD, size=12)),
                 ft.DataColumn(ft.Text(self.get_text('col_location'), weight=ft.FontWeight.BOLD, size=12)),
             ],
             rows=[],
@@ -406,6 +432,23 @@ class ScraperApp:
             ft.Container(height=10),
         )
         
+    def show_about_dialog(self, e):
+        """Show about dialog"""
+        dlg = ft.AlertDialog(
+            title=ft.Text(self.get_text('about')),
+            content=ft.Column([
+                ft.Text("Business Data Extractor & Marketing Suite", weight=ft.FontWeight.BOLD),
+                ft.Text("Empowering businesses with high-quality, actionable data for successful marketing campaigns."),
+                ft.Divider(),
+                ft.Text("Version: 2.5.0 (Enterprise Edition)"),
+                ft.Text("Developed for Professional Use."),
+            ], tight=True, width=400),
+            actions=[
+                ft.TextButton("Close", on_click=lambda e: self.page.close_dialog()),
+            ],
+        )
+        self.page.open_dialog(dlg)
+
     def add_log(self, message: str):
         """Add a log message"""
         timestamp = datetime.now().strftime("%H:%M:%S")
@@ -438,6 +481,8 @@ class ScraperApp:
                     ft.DataCell(ft.Text(data.get('name', 'N/A'), size=11, max_lines=2, overflow=ft.TextOverflow.ELLIPSIS)),
                     ft.DataCell(ft.Text(data.get('phone', 'N/A'), size=11)),
                     ft.DataCell(ft.Text(data.get('address', 'N/A'), size=11, max_lines=2, overflow=ft.TextOverflow.ELLIPSIS)),
+                    ft.DataCell(ft.Text(data.get('website', 'N/A'), size=11, max_lines=1, overflow=ft.TextOverflow.ELLIPSIS)),
+                    ft.DataCell(ft.Text(data.get('emails', 'N/A'), size=11, max_lines=1, overflow=ft.TextOverflow.ELLIPSIS)),
                     ft.DataCell(
                         ft.TextButton(
                             location_text,
@@ -472,20 +517,20 @@ class ScraperApp:
                 self.district_field.value or ""
             )
         except Exception as e:
-            self.update_status(f"❌ Error: {str(e)}")
+            self.update_status(f"Error: {str(e)}")
             self.on_search_complete()
             
     def start_search(self, e):
         """Start button click handler"""
         # Validate inputs
         if not self.business_tag_field.value or not self.region_field.value or not self.city_field.value:
-            msg = "⚠️ يرجى ملء جميع الحقول الإلزامية" if self.is_arabic else "⚠️ Please fill in all required fields"
+            msg = "يرجى ملء جميع الحقول الإلزامية" if self.is_arabic else "Please fill in all required fields"
             self.update_status(msg)
             return
         
         # Show what will be searched
         district_text = f" - {self.district_field.value}" if self.district_field.value else ""
-        search_info = f"🔍 {self.business_tag_field.value} | {self.city_field.value}{district_text}, {self.region_field.value}"
+        search_info = f"{self.business_tag_field.value} | {self.city_field.value}{district_text}, {self.region_field.value}"
         self.update_status(search_info)
             
         # Clear previous data
@@ -505,13 +550,13 @@ class ScraperApp:
     def stop_search(self, e):
         """Stop button click handler"""
         self.scraper.stop()
-        self.update_status("⏸️ Search stopped by user")
+        self.update_status("Search stopped by user")
         self.on_search_complete()
         
     def export_data(self, e):
         """Export data to Excel"""
         if not self.data_rows:
-            self.update_status("⚠️ No data to export")
+            self.update_status("No data to export")
             return
             
         try:
@@ -532,6 +577,9 @@ class ScraperApp:
                 'name': 'Business Name',
                 'phone': 'Phone',
                 'address': 'Address',
+                'website': 'Website',
+                'emails': 'Emails',
+                'socials': 'Social Media',
                 'latitude': 'Latitude',
                 'longitude': 'Longitude',
                 'url': 'Google Maps URL'
@@ -543,14 +591,14 @@ class ScraperApp:
             # Export to Excel
             df.to_excel(filepath, index=False, engine='openpyxl')
             
-            self.update_status(f"✅ Exported to: {filepath}")
+            self.update_status(f"Exported to: {filepath}")
             
             # Open file location
             import subprocess
             subprocess.Popen(f'explorer /select,"{filepath.absolute()}"')
             
         except Exception as ex:
-            self.update_status(f"❌ Export failed: {str(ex)}")
+            self.update_status(f"Export failed: {str(ex)}")
 
 
 def main(page: ft.Page):
