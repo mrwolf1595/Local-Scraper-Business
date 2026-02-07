@@ -1,33 +1,71 @@
-"""Configuration settings for the Google Maps Scraper"""
+"""Enterprise Configuration - Business Data Extractor"""
 
-# Scraper Settings
-SCROLL_PAUSE_MIN = 2.5
-SCROLL_PAUSE_MAX = 4.5
-CLICK_DELAY_MIN = 1.5
-CLICK_DELAY_MAX = 3.0
+# ============================================
+# SCRAPER PERFORMANCE SETTINGS
+# ============================================
 
-# "MAX_SCROLL_ATTEMPTS" here refers to how many times we try scrolling
-# when NO NEW results appear (to detect the end of the list).
-# It does NOT limit the total number of results.
-MAX_SCROLL_ATTEMPTS = 20
+# Scroll timing (seconds) - Balanced for speed and reliability
+SCROLL_PAUSE_MIN = 2.0
+SCROLL_PAUSE_MAX = 3.5
 
-# Safety limit for total results (set very high for "unlimited")
-MAX_RESULTS = 10000
+# Click/navigation delay (seconds)
+CLICK_DELAY_MIN = 1.0
+CLICK_DELAY_MAX = 2.0
 
-# Concurrency Settings (New)
-# Number of tabs to open simultaneously for faster extraction.
-# Warning: Setting this too high (e.g., > 10) might get you blocked.
+# How many times to try scrolling when no new results appear
+# Higher = more thorough but slower
+MAX_SCROLL_ATTEMPTS = 15
+
+# Maximum results to extract (safety limit)
+MAX_RESULTS = 5000
+
+# ============================================
+# CONCURRENCY SETTINGS
+# ============================================
+
+# Number of parallel browser tabs for extraction
+# Recommended: 3-5 for stable performance
+# Warning: >8 may trigger rate limiting
 MAX_CONCURRENT_PAGES = 4
 
-# Browser Settings
+# ============================================
+# BROWSER SETTINGS
+# ============================================
+
+# Run browser in background (True) or visible (False)
 HEADLESS = False
+
+# Browser viewport size
 VIEWPORT_WIDTH = 1920
 VIEWPORT_HEIGHT = 1080
 
-# UI Settings
-WINDOW_WIDTH = 1200
-WINDOW_HEIGHT = 800
-APP_TITLE = "Business Data Extractor Enterprise"
+# ============================================
+# APPLICATION UI SETTINGS
+# ============================================
 
-# Data Export
+# Window dimensions
+WINDOW_WIDTH = 1400
+WINDOW_HEIGHT = 900
+
+# Application branding
+APP_TITLE = "Business Extractor Enterprise"
+
+# ============================================
+# DATA EXPORT SETTINGS
+# ============================================
+
+# Output directory for exported files
 OUTPUT_DIR = "exports"
+
+# ============================================
+# ADVANCED SETTINGS (Modify with caution)
+# ============================================
+
+# Website scraping timeout (ms)
+WEBSITE_TIMEOUT = 10000
+
+# Maximum social media links to extract per business
+MAX_SOCIALS = 5
+
+# Enable detailed logging
+DEBUG_MODE = False
